@@ -21,4 +21,9 @@ public class WebController {
     public String register(){
         return "register";
     }
+
+    @RequestMapping(value = "/exam", method = RequestMethod.GET)
+    public String exam(){
+        return "exam";
+    }
 }
