@@ -7,3 +7,4 @@ ENV POSTGRES_PASSWORD=development
 EXPOSE 5432
 
 COPY src/main/resources/sql/init_table01.sql /docker-entrypoint-initdb.d/
+COPY src/main/resources/question_mod.csv /docker-entrypoint-initdb.d/
