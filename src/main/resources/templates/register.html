@@ -7,7 +7,8 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-
+<header th:replace="fragments/navbar :: navbar"></header>
+<main>
 <form th:action="@{/register}" method="post">
     <h2>Register</h2>
 
@@ -35,5 +36,6 @@
         <button type="submit">Register</button>
     </div>
 </form>
+</main>
 </body>
 </html>

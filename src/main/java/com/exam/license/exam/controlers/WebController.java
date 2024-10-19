@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.net.http.HttpClient;
 import java.security.Principal;
 
 @Controller
@@ -23,14 +22,17 @@ public class WebController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String home(){
+    public String home(Model model, Principal principal){
+        if (principal != null) {
+            model.addAttribute("username", principal.getName());
+        }
         return "index";
     }
 
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
-    public String home2(){
-        return home();
+    public String home2(Model model, Principal principal){
+        return home(model,  principal);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
