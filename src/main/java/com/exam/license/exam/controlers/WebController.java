@@ -36,12 +36,18 @@ public class WebController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginV(){
+    public String loginV(Model model, Principal principal){
+        if(principal!=null) {
+            return "redirect:/home";
+        }
         return "login";
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String registerView(){
+    public String registerView(Model model, Principal principal){
+        if(principal!=null) {
+            return "redirect:/home";
+        }
         return "register";
     }
 
