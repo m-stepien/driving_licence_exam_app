@@ -1,5 +1,6 @@
 package com.exam.license.exam.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -25,6 +26,7 @@ public class Question {
             joinColumns = @JoinColumn(name = "question_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
+    @JsonManagedReference
     private Set<Category> categorySet = new HashSet<>();
 
     public Question() {

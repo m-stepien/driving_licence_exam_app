@@ -1,5 +1,7 @@
 package com.exam.license.exam.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.collection.internal.StandardBagSemantics;
 
@@ -13,6 +15,7 @@ public class Category {
     long id;
     String name;
     @ManyToMany(mappedBy = "categorySet")
+    @JsonBackReference
     private Set<Question> questionSet = new HashSet<>();
 
     public Category() {

@@ -71,3 +71,5 @@ FOREIGN KEY (category_id) REFERENCES category(id)
 insert into category_connection(question_id, category_id) select qustion_temp.question_id, category.id from qustion_temp join category on category.name = ANY (string_to_array(qustion_temp.category, ','));
 
 drop table qustion_temp;
+
+update category set name = LOWER(category.name);
