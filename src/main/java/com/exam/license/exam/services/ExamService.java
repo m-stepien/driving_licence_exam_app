@@ -1,6 +1,5 @@
 package com.exam.license.exam.services;
 
-import com.exam.license.exam.exceptions.NoSuchDataInDatabaseException;
 import com.exam.license.exam.models.Category;
 import com.exam.license.exam.models.Question;
 import com.exam.license.exam.repository.CategoryRepository;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ExamService {
