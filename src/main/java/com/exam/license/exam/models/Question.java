@@ -13,7 +13,8 @@ public class Question {
     private Long id;
     @Column(columnDefinition = "TEXT")
     private String question;
-    private String answer_correct;
+    @Column(name ="answer_correct")
+    private String answerCorrect;
     @OneToOne
     @JoinColumn(name = "answers_id")
     private Answer answer;
@@ -32,10 +33,10 @@ public class Question {
     public Question() {
     }
 
-    public Question(Long id, String question, String answer_correct, Answer answer, Media media, Set<Category> categorySet) {
+    public Question(Long id, String question, String answerCorrect, Answer answer, Media media, Set<Category> categorySet) {
         this.id = id;
         this.question = question;
-        this.answer_correct = answer_correct;
+        this.answerCorrect = answerCorrect;
         this.answer = answer;
         this.media = media;
         this.categorySet = categorySet;
@@ -57,12 +58,12 @@ public class Question {
         this.question = question;
     }
 
-    public String getAnswer_correct() {
-        return answer_correct;
+    public String getAnswerCorrect() {
+        return answerCorrect;
     }
 
-    public void setAnswer_correct(String answer_correct) {
-        this.answer_correct = answer_correct;
+    public void setAnswerCorrect(String answerCorrect) {
+        this.answerCorrect = answerCorrect;
     }
 
     public Answer getAnswer() {

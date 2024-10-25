@@ -1,6 +1,6 @@
 package com.exam.license.exam.controlers;
 
-import com.exam.license.exam.exceptions.NoSuchCategoryInDatabaseException;
+import com.exam.license.exam.exceptions.NoSuchElementInDatabaseException;
 import com.exam.license.exam.exceptions.NotEnoughtQuestionsException;
 import com.exam.license.exam.models.Question;
 import com.exam.license.exam.services.ExamService;
@@ -24,7 +24,7 @@ public class ExamController {
     }
 
     @GetMapping("/{category}")
-    public List<Question> fetchQuestionList(@PathVariable String category) throws NotEnoughtQuestionsException, NoSuchCategoryInDatabaseException {
+    public List<Question> fetchQuestionList(@PathVariable String category) throws NotEnoughtQuestionsException, NoSuchElementInDatabaseException {
         List<Question> questionList = this.examService.getQuestionsForExam(category);
         return questionList;
     }
