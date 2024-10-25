@@ -23,7 +23,7 @@ public class ExamController {
 
     @GetMapping("/{category}")
     public List<Question> fetchQuestionList(@PathVariable String category){
-        List<Question> questionList = this.examService.getRandomQuestionForExam(category);
+        List<Question> questionList = this.examService.getQuestionsForExam(category);
         return questionList;
     }
 }

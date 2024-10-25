@@ -1,9 +1,8 @@
 package com.exam.license.exam.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import org.hibernate.collection.internal.StandardBagSemantics;
+
 
 import java.util.HashSet;
 import java.util.Set;
