@@ -1,5 +1,7 @@
 package com.exam.license.exam.controlers;
 
+import com.exam.license.exam.exceptions.NoSuchCategoryInDatabaseException;
+import com.exam.license.exam.exceptions.NotEnoughtQuestionsException;
 import com.exam.license.exam.models.Question;
 import com.exam.license.exam.services.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ public class ExamController {
     }
 
     @GetMapping("/{category}")
-    public List<Question> fetchQuestionList(@PathVariable String category){
+    public List<Question> fetchQuestionList(@PathVariable String category) throws NotEnoughtQuestionsException, NoSuchCategoryInDatabaseException {
         List<Question> questionList = this.examService.getQuestionsForExam(category);
         return questionList;
     }
