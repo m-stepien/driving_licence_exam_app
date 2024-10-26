@@ -1,6 +1,5 @@
 package com.exam.license.exam.repository;
 
-import com.exam.license.exam.models.Category;
 import com.exam.license.exam.models.Question;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

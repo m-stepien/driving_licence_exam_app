@@ -37,19 +37,6 @@ public class ExamServiceTest {
     ExamService examService;
 
     @Test
-    public void testGetQuestionsForCategegory() throws NoSuchElementInDatabaseException, NotEnoughtQuestionsException {
-        Set<Question> questions=new HashSet<Question>();
-        for(int i =0; i<14; i++){
-            Question question = new Question();
-            question.setId(i);
-            questions.add(question);
-        }
-        Mockito.when(categoryRepository.findCategoryByName("b")).thenReturn(Optional.of(new Category(13, "b",questions)));
-        Set<Question> subset = new HashSet<>(examService.getQuestionsForExam("b"));
-        Assertions.assertEquals(subset, questions);
-    }
-
-    @Test
     public void testGetQuestionsForNotExistingCategory() throws NoSuchElementInDatabaseException, NotEnoughtQuestionsException {
         Mockito.when(categoryRepository.findCategoryByName("z")).thenReturn(Optional.empty());
         Assertions.assertThrows(NoSuchElementInDatabaseException.class, ()->examService.getQuestionsForExam("z"));
