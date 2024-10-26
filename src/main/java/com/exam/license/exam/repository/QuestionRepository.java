@@ -11,6 +11,23 @@ import java.util.List;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    @Query("SELECT q FROM Question q WHERE :ctn MEMBER OF q.categorySet ORDER BY random() LIMIT :l")
-    List<Question> findNQuestionWithCategory(@Param("l") long limit, @Param("ctn") Category category);
+   @Query(value = """
+            SELECT q.* FROM question q
+            JOIN category_connection cc ON q.id = cc.question_id
+            JOIN category c ON cc.category_id = c.id
+            WHERE q.points = :ptn AND q.answers_id IS NULL AND c.name = :ctn
+            ORDER BY RANDOM()
+            LIMIT :l
+            """, nativeQuery = true)
+    List<Question> findNBasicQuestionWithCategoryAndPoints(@Param("l") long limit, @Param("ctn") String category, @Param("ptn") int points);
+
+    @Query(value = """
+            SELECT q.* FROM question q
+            JOIN category_connection cc ON q.id = cc.question_id
+            JOIN category c ON cc.category_id = c.id
+            WHERE q.points = :ptn AND q.answers_id IS NOT NULL AND c.name = :ctn
+            ORDER BY RANDOM()
+            LIMIT :l
+            """, nativeQuery = true)
+    List<Question> findNSpecializationQuestionWithCategoryAndPoints(@Param("l") long limit, @Param("ctn") String category, @Param("ptn") int points);
 }

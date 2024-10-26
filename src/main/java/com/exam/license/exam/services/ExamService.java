@@ -2,17 +2,12 @@ package com.exam.license.exam.services;
 
 import com.exam.license.exam.exceptions.NoSuchElementInDatabaseException;
 import com.exam.license.exam.exceptions.NotEnoughtQuestionsException;
-import com.exam.license.exam.models.Category;
-import com.exam.license.exam.models.Question;
-import com.exam.license.exam.models.Score;
-import com.exam.license.exam.models.UserAnswer;
+import com.exam.license.exam.models.*;
 import com.exam.license.exam.repository.CategoryRepository;
 import com.exam.license.exam.repository.QuestionRepository;
-import com.exam.license.exam.selector.QuestionSelector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,25 +23,31 @@ public class ExamService {
     }
 
     public List<Question> getQuestionsForExam(String categoryName) throws NotEnoughtQuestionsException, NoSuchElementInDatabaseException {
-        Category category = this.categoryRepository.findCategoryByName(categoryName).orElseThrow(NoSuchElementInDatabaseException::new);
-        ArrayList<Question> questions = new ArrayList<>(category.getQuestionSet());
-        QuestionSelector questionSelector = new QuestionSelector();
-        List<Question> subset = questionSelector.selectQuestionsFromSet(questions, limit);
-        return subset;
+        List<Question> questions = this.questionRepository.findNBasicQuestionWithCategoryAndPoints(10, categoryName, 3);
+        if(questions.size()<10){
+            throw new NotEnoughtQuestionsException();
+        }
+        return questions;
     }
 
     public Score checkUserSolution(List<UserAnswer> userSolution) throws NoSuchElementInDatabaseException{
-        Score score = new Score(0, userSolution.size());
+        UserScore score = new UserScore();
         for(UserAnswer userAnswer:userSolution){
-            if(this.checkAnswer(userAnswer)){
-                score.addPoint();
-            }
+            score.addScore(this.checkAnswer(userAnswer));
         }
         return score;
     }
 
-    public boolean checkAnswer(UserAnswer userAnswer) throws NoSuchElementInDatabaseException{
+    public Score checkAnswer(UserAnswer userAnswer) throws NoSuchElementInDatabaseException{
         Question question = this.questionRepository.findById(Long.valueOf(userAnswer.getQuestionId())).orElseThrow(NoSuchElementInDatabaseException::new);
-        return question.getAnswerCorrect().equals(userAnswer.getSelectedAnswer());
+        Score questionScore = new Score();
+        questionScore.setOf(question.getPoints());
+        if(question.getAnswerCorrect().equals(userAnswer.getSelectedAnswer())){
+            questionScore.setPoints(question.getPoints());
+
+        }else {
+            questionScore.setPoints(0);
+        }
+        return questionScore;
     }
 }

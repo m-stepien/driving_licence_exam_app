@@ -14,10 +14,6 @@ public class Score {
         this.of = of;
     }
 
-    public void addPoint(){
-        this.points+=1;
-    }
-
     public int getPoints() {
         return points;
     }
@@ -45,5 +41,10 @@ public class Score {
     @Override
     public int hashCode() {
         return Objects.hash(points, of);
+    }
+
+    @Override
+    public String toString(){
+        return "point: " +this.getPoints() +"\nof:"+this.getOf();
     }
 }
