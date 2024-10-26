@@ -59,7 +59,6 @@ public class ExamServiceTest {
         UserAnswer userAnswer = new UserAnswer();
         userAnswer.setQuestionId(1);
         userAnswer.setSelectedAnswer("c");
-        //wzorzec obserwatora do sledzenia poprawnych odpowiedzi?
         Assertions.assertTrue(examService.checkAnswer(userAnswer));
     }
 

@@ -13,7 +13,7 @@ public class Question {
     private Long id;
     @Column(columnDefinition = "TEXT")
     private String question;
-    @Column(name ="answer_correct")
+    @Column(name = "answer_correct")
     private String answerCorrect;
     @OneToOne
     @JoinColumn(name = "answers_id")
@@ -21,6 +21,8 @@ public class Question {
     @OneToOne
     @JoinColumn(name = "media_id")
     private Media media;
+    @Column(name = "points")
+    private int points;
     @ManyToMany
     @JoinTable(
             name = "category_connection",
@@ -33,13 +35,14 @@ public class Question {
     public Question() {
     }
 
-    public Question(Long id, String question, String answerCorrect, Answer answer, Media media, Set<Category> categorySet) {
+    public Question(Long id, String question, String answerCorrect, Answer answer, Media media, Set<Category> categorySet, int points) {
         this.id = id;
         this.question = question;
         this.answerCorrect = answerCorrect;
         this.answer = answer;
         this.media = media;
         this.categorySet = categorySet;
+        this.points = points;
     }
 
     public Long getId() {
@@ -88,5 +91,13 @@ public class Question {
 
     public void setCategorySet(Set<Category> categorySet) {
         this.categorySet = categorySet;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 }
