@@ -13,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 @Service
 public class ExamService {
+    //todo implement paggination over questions
+    //todo make view for exam
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
-    private final int limit = 14;
 
     @Autowired
     public ExamService(QuestionRepository questionRepository, CategoryRepository categoryRepository) {
@@ -32,9 +34,13 @@ public class ExamService {
         exam.addAll(fetchSpecificQuestionType(10, categoryName, 3, false));
         exam.addAll(fetchSpecificQuestionType(6, categoryName, 2, false));
         exam.addAll(fetchSpecificQuestionType(4, categoryName, 1, false));
-        exam.addAll(fetchSpecificQuestionType(6, categoryName, 3, true));
-        exam.addAll(fetchSpecificQuestionType(4, categoryName, 2, true));
-        exam.addAll(fetchSpecificQuestionType(2, categoryName, 1, true));
+        Collections.shuffle(exam);
+        List<Question> specializationPart = new ArrayList<>();
+        specializationPart.addAll(fetchSpecificQuestionType(6, categoryName, 3, true));
+        specializationPart.addAll(fetchSpecificQuestionType(4, categoryName, 2, true));
+        specializationPart.addAll(fetchSpecificQuestionType(2, categoryName, 1, true));
+        Collections.shuffle(specializationPart);
+        exam.addAll(specializationPart);
         return exam;
     }
 
