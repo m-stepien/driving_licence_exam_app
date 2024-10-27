@@ -9,18 +9,26 @@ import com.exam.license.exam.models.UserScore;
 import com.exam.license.exam.repository.CategoryRepository;
 import com.exam.license.exam.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
 @Service
+@SessionScope
 public class ExamService {
     //todo implement paggination over questions
     //todo make view for exam
+    //todo error with category set
+    //todo do i realy need category set in question model ? if yes why?
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
+    @Lazy
+    private List<Question> exam = new ArrayList<>();
+    private int questionIdx = 0;
 
     @Autowired
     public ExamService(QuestionRepository questionRepository, CategoryRepository categoryRepository) {
@@ -28,23 +36,30 @@ public class ExamService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Question> getQuestionsForExam(String categoryName) throws NotEnoughtQuestionsException, NoSuchElementInDatabaseException {
-        List<Question> exam = new ArrayList<>();
+    public void createExam(String categoryName) throws NotEnoughtQuestionsException, NoSuchElementInDatabaseException {
         categoryRepository.findCategoryByName(categoryName).orElseThrow(NoSuchElementInDatabaseException::new);
-        exam.addAll(fetchSpecificQuestionType(10, categoryName, 3, false));
-        exam.addAll(fetchSpecificQuestionType(6, categoryName, 2, false));
-        exam.addAll(fetchSpecificQuestionType(4, categoryName, 1, false));
+        this.exam.addAll(fetchQuestionType(10, categoryName, 3, false));
+        this.exam.addAll(fetchQuestionType(6, categoryName, 2, false));
+        this.exam.addAll(fetchQuestionType(4, categoryName, 1, false));
         Collections.shuffle(exam);
         List<Question> specializationPart = new ArrayList<>();
-        specializationPart.addAll(fetchSpecificQuestionType(6, categoryName, 3, true));
-        specializationPart.addAll(fetchSpecificQuestionType(4, categoryName, 2, true));
-        specializationPart.addAll(fetchSpecificQuestionType(2, categoryName, 1, true));
+        specializationPart.addAll(fetchQuestionType(6, categoryName, 3, true));
+        specializationPart.addAll(fetchQuestionType(4, categoryName, 2, true));
+        specializationPart.addAll(fetchQuestionType(2, categoryName, 1, true));
         Collections.shuffle(specializationPart);
-        exam.addAll(specializationPart);
-        return exam;
+        this.exam.addAll(specializationPart);
     }
 
-    public List<Question> fetchSpecificQuestionType(int limit, String categoryName, int point, boolean isSpecialization) throws NotEnoughtQuestionsException {
+    public Question getNextQuestion(){
+        Question question = null;
+        if(this.questionIdx<this.exam.size()){
+            question = this.exam.get(this.questionIdx);
+            this.questionIdx++;
+        }
+        return question;
+    }
+
+    public List<Question> fetchQuestionType(int limit, String categoryName, int point, boolean isSpecialization) throws NotEnoughtQuestionsException {
         List<Question> questions;
         if (isSpecialization) {
             questions = this.questionRepository.findNBasicQuestionWithCategoryAndPoints(limit,

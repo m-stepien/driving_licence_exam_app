@@ -24,8 +24,16 @@ public class ExamController {
     }
 
     @GetMapping("/{category}")
-    public List<Question> fetchQuestionList(@PathVariable String category) throws NotEnoughtQuestionsException, NoSuchElementInDatabaseException {
-        List<Question> questionList = this.examService.getQuestionsForExam(category);
-        return questionList;
+    public Question startExam(@PathVariable String category) throws NotEnoughtQuestionsException, NoSuchElementInDatabaseException {
+        this.examService.createExam(category);
+        Question question = this.examService.getNextQuestion();
+        return question;
     }
+
+    @GetMapping("/question/next")
+    public Question fetchNextQuestion(){
+        Question nextQuestion = this.examService.getNextQuestion();
+        return nextQuestion;
+    }
+
 }

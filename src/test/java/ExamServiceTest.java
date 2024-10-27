@@ -39,7 +39,7 @@ public class ExamServiceTest {
     @Test
     public void testGetQuestionsForNotExistingCategory() throws NoSuchElementInDatabaseException, NotEnoughtQuestionsException {
         Mockito.when(categoryRepository.findCategoryByName("z")).thenReturn(Optional.empty());
-        Assertions.assertThrows(NoSuchElementInDatabaseException.class, ()->examService.getQuestionsForExam("z"));
+        Assertions.assertThrows(NoSuchElementInDatabaseException.class, ()->examService.createExam("z"));
     }
 
     @Test
