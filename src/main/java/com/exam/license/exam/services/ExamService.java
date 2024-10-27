@@ -20,10 +20,9 @@ import java.util.Collections;
 @Service
 @SessionScope
 public class ExamService {
-    //todo implement paggination over questions
     //todo make view for exam
-    //todo error with category set
-    //todo do i realy need category set in question model ? if yes why?
+    //todo handle what if out of question.size(). currently return null
+    //todo handle what if reload page but not getNext. currently reload getting next question instead of current
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
     @Lazy

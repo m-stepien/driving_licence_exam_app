@@ -13,17 +13,13 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     String name;
-    @ManyToMany(mappedBy = "categorySet")
-    @JsonBackReference
-    private Set<Question> questionSet = new HashSet<>();
 
     public Category() {
     }
 
-    public Category(long id, String name, Set<Question> questionSet) {
+    public Category(long id, String name) {
         this.id = id;
         this.name = name;
-        this.questionSet = questionSet;
     }
 
     public long getId() {
@@ -42,11 +38,4 @@ public class Category {
         this.name = name;
     }
 
-    public Set<Question> getQuestionSet() {
-        return questionSet;
-    }
-
-    public void setQuestionSet(Set<Question> questionSet) {
-        this.questionSet = questionSet;
-    }
 }

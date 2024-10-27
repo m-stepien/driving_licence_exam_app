@@ -23,25 +23,15 @@ public class Question {
     private Media media;
     @Column(name = "points")
     private int points;
-    @ManyToMany
-    @JoinTable(
-            name = "category_connection",
-            joinColumns = @JoinColumn(name = "question_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    @JsonManagedReference
-    private Set<Category> categorySet = new HashSet<>();
-
     public Question() {
     }
 
-    public Question(Long id, String question, String answerCorrect, Answer answer, Media media, Set<Category> categorySet, int points) {
+    public Question(Long id, String question, String answerCorrect, Answer answer, Media media, int points) {
         this.id = id;
         this.question = question;
         this.answerCorrect = answerCorrect;
         this.answer = answer;
         this.media = media;
-        this.categorySet = categorySet;
         this.points = points;
     }
 
@@ -83,14 +73,6 @@ public class Question {
 
     public void setMedia(Media media) {
         this.media = media;
-    }
-
-    public Set<Category> getCategorySet() {
-        return categorySet;
-    }
-
-    public void setCategorySet(Set<Category> categorySet) {
-        this.categorySet = categorySet;
     }
 
     public int getPoints() {
