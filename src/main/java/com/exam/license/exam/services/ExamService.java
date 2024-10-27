@@ -1,5 +1,6 @@
 package com.exam.license.exam.services;
 
+import com.exam.license.exam.exceptions.EndOfQuestionsInExam;
 import com.exam.license.exam.exceptions.NoSuchElementInDatabaseException;
 import com.exam.license.exam.exceptions.NotEnoughtQuestionsException;
 import com.exam.license.exam.models.Question;
@@ -9,23 +10,19 @@ import com.exam.license.exam.models.UserScore;
 import com.exam.license.exam.repository.CategoryRepository;
 import com.exam.license.exam.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @SessionScope
 public class ExamService {
     //todo make view for exam
-    //todo handle what if out of question.size(). currently return null
-    //todo handle what if reload page but not getNext. currently reload getting next question instead of current
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
-    @Lazy
     private List<Question> exam = new ArrayList<>();
     private int questionIdx = 0;
 
@@ -49,11 +46,19 @@ public class ExamService {
         this.exam.addAll(specializationPart);
     }
 
-    public Question getNextQuestion(){
+    public Question getCurrentQuestion() {
         Question question = null;
-        if(this.questionIdx<this.exam.size()){
+        if (this.questionIdx < this.exam.size()) {
             question = this.exam.get(this.questionIdx);
-            this.questionIdx++;
+        }
+        return question;
+    }
+
+    public Question getNextQuestion() throws EndOfQuestionsInExam {
+        this.questionIdx++;
+        Question question = this.getCurrentQuestion();
+        if (question == null) {
+            throw new EndOfQuestionsInExam();
         }
         return question;
     }
