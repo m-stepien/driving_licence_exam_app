@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exam</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/quiz.css}">
+
 </head>
 <body>
 <header th:replace="fragments/navbar :: navbar"></header>
 <main>
     <div class="quiz-container" id="quiz">
+        <div id="points"></div>
         <div id="question-container">
-            <div class="question" id="question">Question text here</div>
+            <div class="question" id="question"></div>
             <div class="options" id="options"></div>
         </div>
         <button class="next-btn" onclick="nextQuestion()">Next</button>

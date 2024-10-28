@@ -18,8 +18,6 @@ import java.util.*;
 @Service
 @SessionScope
 public class ExamService {
-    //todo make view for exam
-    //todo reload will make exam create one more time not acceptable
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
     private List<Question> exam = new ArrayList<>();
@@ -73,10 +71,11 @@ public class ExamService {
     public List<Question> fetchQuestionType(int limit, String categoryName, int point, boolean isSpecialization) throws NotEnoughtQuestionsException {
         List<Question> questions;
         if (isSpecialization) {
-            questions = this.questionRepository.findNBasicQuestionWithCategoryAndPoints(limit,
-                    categoryName, point);
-        } else {
             questions = this.questionRepository.findNSpecializationQuestionWithCategoryAndPoints(limit,
+                    categoryName, point);
+
+        } else {
+            questions = this.questionRepository.findNBasicQuestionWithCategoryAndPoints(limit,
                     categoryName, point);
         }
         if (questions.size() < limit) {
