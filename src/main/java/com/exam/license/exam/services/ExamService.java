@@ -13,35 +13,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 @SessionScope
 public class ExamService {
     //todo make view for exam
+    //todo reload will make exam create one more time not acceptable
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
     private List<Question> exam = new ArrayList<>();
     private int questionIdx = 0;
+    private Map<Integer, Integer> basicQuestionNumberByPoints = new HashMap<>();
+    private Map<Integer, Integer> specializationQuestionNumberByPoints = new HashMap<>();
 
     @Autowired
     public ExamService(QuestionRepository questionRepository, CategoryRepository categoryRepository) {
         this.questionRepository = questionRepository;
         this.categoryRepository = categoryRepository;
+        this.basicQuestionNumberByPoints.put(3, 10);
+        this.basicQuestionNumberByPoints.put(2,6);
+        this.basicQuestionNumberByPoints.put(1,4);
+        this.specializationQuestionNumberByPoints.put(3, 6);
+        this.specializationQuestionNumberByPoints.put(2, 4);
+        this.specializationQuestionNumberByPoints.put(1, 2);
     }
 
     public void createExam(String categoryName) throws NotEnoughtQuestionsException, NoSuchElementInDatabaseException {
         categoryRepository.findCategoryByName(categoryName).orElseThrow(NoSuchElementInDatabaseException::new);
-        this.exam.addAll(fetchQuestionType(10, categoryName, 3, false));
-        this.exam.addAll(fetchQuestionType(6, categoryName, 2, false));
-        this.exam.addAll(fetchQuestionType(4, categoryName, 1, false));
+        for (Map.Entry<Integer,Integer> entry : this.basicQuestionNumberByPoints.entrySet()) {
+            this.exam.addAll(fetchQuestionType(entry.getValue(), categoryName, entry.getKey(), false));
+        }
         Collections.shuffle(exam);
         List<Question> specializationPart = new ArrayList<>();
-        specializationPart.addAll(fetchQuestionType(6, categoryName, 3, true));
-        specializationPart.addAll(fetchQuestionType(4, categoryName, 2, true));
-        specializationPart.addAll(fetchQuestionType(2, categoryName, 1, true));
+        for (Map.Entry<Integer,Integer> entry : this.specializationQuestionNumberByPoints.entrySet()) {
+            specializationPart.addAll(fetchQuestionType(entry.getValue(), categoryName, entry.getKey(), true));
+        }
         Collections.shuffle(specializationPart);
         this.exam.addAll(specializationPart);
     }
@@ -97,5 +104,20 @@ public class ExamService {
             questionScore.setPoints(0);
         }
         return questionScore;
+    }
+
+    public Map<String, Integer> getNumberOfQuestionByType(){
+        Map<String, Integer> questionNumberByType= new HashMap<>();
+        questionNumberByType.put("basic", sumQuestionOf(this.basicQuestionNumberByPoints));
+        questionNumberByType.put("specialization", sumQuestionOf(this.specializationQuestionNumberByPoints));
+        return questionNumberByType;
+    }
+
+    private int sumQuestionOf(Map<Integer, Integer> questionMap){
+        int sum = 0;
+        for (Map.Entry<Integer,Integer> entry : questionMap.entrySet()) {
+            sum+=entry.getValue();
+        }
+        return sum;
     }
 }

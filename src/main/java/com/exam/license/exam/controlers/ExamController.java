@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/exam")
@@ -55,6 +56,14 @@ public class ExamController {
             headers.setLocation(URI.create("/check"));
             response = ResponseEntity.status(404).headers(headers).build();
         }
+        return response;
+    }
+
+    @GetMapping("/question/number")
+    public ResponseEntity<Map<String, Integer>> getNumberOfQuestion() {
+        ResponseEntity<Map<String,Integer>> response;
+        Map<String, Integer> questionNumber = this.examService.getNumberOfQuestionByType();
+        response = ResponseEntity.ok(questionNumber);
         return response;
     }
 

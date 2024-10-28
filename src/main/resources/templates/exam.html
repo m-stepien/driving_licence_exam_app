@@ -9,8 +9,18 @@
 <body>
 <header th:replace="fragments/navbar :: navbar"></header>
 <main>
-<div class="exam">
-</div>
+    <div class="quiz-container" id="quiz">
+        <div id="question-container">
+            <div class="question" id="question">Question text here</div>
+            <div class="options" id="options"></div>
+        </div>
+        <button class="next-btn" onclick="nextQuestion()">Next</button>
+    </div>
+    <script type="text/javascript">
+        const category = "[[${category}]]"; "";
+        console.log("Category:", category);
+    </script>
+    <script th:src="@{/js/quiz.js}" defer></script>
 </main>
 </body>
 </html>

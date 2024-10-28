@@ -1,13 +1,12 @@
 package com.exam.license.exam.controlers;
 
+
 import com.exam.license.exam.models.User;
 import com.exam.license.exam.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -57,12 +56,12 @@ public class WebController {
         return "register";
     }
 
-
-    @RequestMapping(value = "/exam", method = RequestMethod.GET)
-    public String exam(Model model, Principal principal){
+    @GetMapping(value = "/test/{category}")
+    public String startTest(@PathVariable String category, Model model, Principal principal){
         if (principal != null) {
             model.addAttribute("username", principal.getName());
         }
+        model.addAttribute("category", category);
         return "exam";
     }
 }
