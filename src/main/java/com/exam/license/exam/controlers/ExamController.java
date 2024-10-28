@@ -4,6 +4,7 @@ import com.exam.license.exam.exceptions.EndOfQuestionsInExam;
 import com.exam.license.exam.exceptions.NoSuchElementInDatabaseException;
 import com.exam.license.exam.exceptions.NotEnoughtQuestionsException;
 import com.exam.license.exam.models.Question;
+import com.exam.license.exam.models.Score;
 import com.exam.license.exam.services.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -25,11 +26,10 @@ public class ExamController {
     }
 
     @GetMapping("/{category}")
-    public ResponseEntity<Question> startExam(@PathVariable String category) throws NotEnoughtQuestionsException, NoSuchElementInDatabaseException {
+    public ResponseEntity<Map<String, Integer>> startExam(@PathVariable String category) throws NotEnoughtQuestionsException, NoSuchElementInDatabaseException {
         this.examService.createExam(category);
-        Question question;
-        question = this.examService.getCurrentQuestion();
-        ResponseEntity<Question> response = ResponseEntity.ok(question);
+        Map<String, Integer> numberOfQuestionByType = this.examService.getNumberOfQuestionByType();
+        ResponseEntity<Map<String, Integer>> response = ResponseEntity.ok(numberOfQuestionByType);
         return response;
     }
 
@@ -53,7 +53,7 @@ public class ExamController {
         }
         catch(EndOfQuestionsInExam e) {
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(URI.create("/check"));
+            headers.setLocation(URI.create("/exam/send/solution"));
             response = ResponseEntity.status(404).headers(headers).build();
         }
         return response;
@@ -67,4 +67,9 @@ public class ExamController {
         return response;
     }
 
+    @PostMapping("/send/solution")
+    public ResponseEntity<Score> sendSolution(Map<Long, String> solution) throws NoSuchElementInDatabaseException{
+        Score userScore = this.examService.checkUserSolution(solution);
+        return ResponseEntity.status(200).body(userScore);
+    }
 }

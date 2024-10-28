@@ -9,6 +9,7 @@ import com.exam.license.exam.models.UserAnswer;
 import com.exam.license.exam.models.UserScore;
 import com.exam.license.exam.repository.CategoryRepository;
 import com.exam.license.exam.repository.QuestionRepository;
+import com.exam.license.exam.utils.SolutionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
@@ -20,8 +21,8 @@ import java.util.*;
 public class ExamService {
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
-    private List<Question> exam = new ArrayList<>();
-    private int questionIdx = 0;
+    private List<Question> exam;
+    private int questionIdx;
     private Map<Integer, Integer> basicQuestionNumberByPoints = new HashMap<>();
     private Map<Integer, Integer> specializationQuestionNumberByPoints = new HashMap<>();
 
@@ -39,6 +40,8 @@ public class ExamService {
 
     public void createExam(String categoryName) throws NotEnoughtQuestionsException, NoSuchElementInDatabaseException {
         categoryRepository.findCategoryByName(categoryName).orElseThrow(NoSuchElementInDatabaseException::new);
+        this.questionIdx = 0;
+        this.exam = new ArrayList<>();
         for (Map.Entry<Integer,Integer> entry : this.basicQuestionNumberByPoints.entrySet()) {
             this.exam.addAll(fetchQuestionType(entry.getValue(), categoryName, entry.getKey(), false));
         }
@@ -84,7 +87,10 @@ public class ExamService {
         return questions;
     }
 
-    public Score checkUserSolution(List<UserAnswer> userSolution) throws NoSuchElementInDatabaseException {
+    public Score checkUserSolution(Map<Long, String> userSolutionMap) throws NoSuchElementInDatabaseException {
+        //todo what to do with score?
+        //todo save data of solution to database?
+        List<UserAnswer> userSolution = SolutionMapper.mapSolutionAnswer(userSolutionMap);
         UserScore score = new UserScore();
         for (UserAnswer userAnswer : userSolution) {
             score.addScore(this.checkAnswer(userAnswer));

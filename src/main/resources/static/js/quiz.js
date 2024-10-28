@@ -1,8 +1,11 @@
 const server_url = "http://localhost:8080";
+let numberOfQuestionByType;
 let currentQuestionId;
 let examSolution = {};
+let basicNumber = 0;
+let specializationNumber = 0;
 async function initQuiz(){
-let question = fetch(server_url + "/exam/" + category)
+await fetch(server_url + "/exam/" + category)
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
@@ -11,12 +14,34 @@ let question = fetch(server_url + "/exam/" + category)
     })
     .then(data => {
         console.log("Fetched Data:", data);
-        return data;
+        numberOfQuestionByType = data;
     })
     .catch(error => {
         console.error('Fetch error:', error);
     });
+    let question = await fetch(server_url + "/exam/question/current")
+                       .then(response => {
+                           if (!response.ok) {
+                               throw new Error('Network response was not ok ' + response.statusText);
+                           }
+                           return response.json();
+                       })
+                       .then(data => {
+                           console.log("Fetched Data:", data);
+                           return data;
+                       })
+                       .catch(error => {
+                           console.error('Fetch error:', error);
+                       });
     return question;
+}
+
+async function sendAnswers(){
+    const response = await fetch(server_url + "/exam/send/solution", {
+      method: "POST",
+      body: JSON.stringify(examSolution),
+      })
+    console.log(response.status);
 }
 
 function putQuestionInsideDOM(question){
@@ -88,6 +113,11 @@ async function nextQuestion(){
         optionsConatiner = document.getElementById("options");
         optionsConatiner.replaceChildren();
         putQuestionInsideDOM(question);
+        increaseQuestionNumber();
+        putNumbersOfQuestionInDom();
+        if(basicNumber+specializationNumber===numberOfQuestionByType.basic+numberOfQuestionByType.specialization){
+            createFinishButton();
+        }
 }
 function selectAnswer(answer){
     console.log("Select answer executed with");
@@ -95,8 +125,38 @@ function selectAnswer(answer){
     examSolution[currentQuestionId] = answer;
 }
 
+function putNumbersOfQuestionInDom(){
+    basicElement = document.getElementById("basic-question-number");
+    basicElement.innerHTML = basicNumber + "/" + numberOfQuestionByType.basic;
+    specializationElement = document.getElementById("specialization-question-number");
+    specializationElement.innerHTML = specializationNumber + "/" +numberOfQuestionByType.specialization;
+}
+
+function increaseQuestionNumber(){
+    if(basicNumber+specializationNumber<numberOfQuestionByType.basic){
+        basicNumber+=1;
+    }
+    else{
+        specializationNumber+=1;
+    }
+}
+
+function createFinishButton(){
+    let finishButton = document.createElement('button');
+    finishButton.className = 'option-btn';
+    finishButton.textContent = 'Send';
+    finishButton.onclick = function() {
+                sendAnswers();
+            };
+    let nextButton = document.getElementById("next");
+    nextButton.replaceWith(finishButton);
+}
+
+
 let firstQuestion;
 (async () =>{
 firstQuestion = await initQuiz();
 putQuestionInsideDOM(firstQuestion);
+increaseQuestionNumber();
+putNumbersOfQuestionInDom();
 })();
