@@ -1,4 +1,3 @@
-//todo showing image in website
 //todo playing wmv in website
 //todo wyswietlanie wyniku testu
 //todo zapis wyników do bazy danych
@@ -11,6 +10,7 @@ let specializationNumber = 0;
 let secondLeft = 20;
 let timer;
 let questionMediaId;
+let media;
 async function initQuiz(){
 await fetch(server_url + "/exam/" + category)
     .then(response => {
@@ -41,6 +41,7 @@ await fetch(server_url + "/exam/" + category)
                            console.error('Fetch error:', error);
                        });
     questionMediaId = question.media.id;
+    media = question.media;
     getMedia()
     return question;
 }
@@ -126,6 +127,7 @@ async function nextQuestion(){
                     console.error('Fetch error:', error);
                 });
         questionMediaId = question.media.id;
+        media = question.media;
         getMedia();
         optionsConatiner = document.getElementById("options");
         optionsConatiner.replaceChildren();
@@ -216,32 +218,51 @@ function progressBar(){
 }
 
 async function getMedia(){
-    if(questionMediaId){
-    var url = server_url + "/media/" +questionMediaId;
-        let media = await fetch(url, {
-        method: 'GET',
-        headers: {
-        'Accept': 'image/jpeg',
-        }
-        }).then(res => res.blob());
-        console.log(media)
-        putMediaInsideDom(media);
-        return media;
+  if(media){
+    var url = server_url + "/media/" + media.id;
+    if(media.type==="jpg"){
+        putImageInsideDom(url);
+    }
+    else{
+        putVideoInsideDom(url);
+    }
   }
   else{
-    console.log("media id is null");
-    return null;
+    console.log("media is null");
   }
 }
 
-function putMediaInsideDom(mediaBlob){
+function putVideoInsideDom(url){
+     let mediaContainer = document.getElementById("media-container");
+     mediaContainer.replaceChildren();
+     let video = document.createElement("video");
+     video.id = "videoPlayer";
+     const source = document.createElement("source");
+     source.src = url;
+     source.type = "video/mp4";
+     video.appendChild(source);
+     mediaContainer.appendChild(video);
+     media = null;
+     video.load();
+     video.play();
+}
+
+async function putImageInsideDom(url){
+    let imageBlob = await fetch(url, {
+    method: 'GET',
+    headers: {
+        'Accept': 'image/jpeg',
+    }
+    }).then(res => res.blob());
+    console.log(imageBlob);
     let imgElement = document.createElement("img");
-    let url = URL.createObjectURL(mediaBlob);
-    imgElement.src = url;
+    let urlImage = URL.createObjectURL(imageBlob);
+    imgElement.src = urlImage;
     imgElement.width = "500";
     let imageContainer = document.getElementById("media-container");
     imageContainer.replaceChildren();
     imageContainer.appendChild(imgElement);
+    media = null;
 }
 
 let firstQuestion;
