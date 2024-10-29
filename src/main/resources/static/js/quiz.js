@@ -1,5 +1,5 @@
-//todo backend wyciagajacy zdjecia z bazy
-//todo pobranie zdjecia lub nagrania
+//todo showing image in website
+//todo playing wmv in website
 //todo wyswietlanie wyniku testu
 //todo zapis wyników do bazy danych
 const server_url = "http://localhost:8080";
@@ -10,6 +10,7 @@ let basicNumber = 0;
 let specializationNumber = 0;
 let secondLeft = 20;
 let timer;
+let questionMediaId;
 async function initQuiz(){
 await fetch(server_url + "/exam/" + category)
     .then(response => {
@@ -39,6 +40,8 @@ await fetch(server_url + "/exam/" + category)
                        .catch(error => {
                            console.error('Fetch error:', error);
                        });
+    questionMediaId = question.media.id;
+    getMedia()
     return question;
 }
 
@@ -122,6 +125,8 @@ async function nextQuestion(){
                 .catch(error => {
                     console.error('Fetch error:', error);
                 });
+        questionMediaId = question.media.id;
+        getMedia();
         optionsConatiner = document.getElementById("options");
         optionsConatiner.replaceChildren();
         putQuestionInsideDOM(question);
@@ -208,9 +213,36 @@ function progressBar(){
     let sPercent = specializationNumber/numberOfQuestionByType.specialization*100;
     document.getElementById("basic-bar").setAttribute("style","width:"+bPercent+"%");
     document.getElementById("special-bar").setAttribute("style","width:"+sPercent+"%");
-
 }
 
+async function getMedia(){
+    if(questionMediaId){
+    var url = server_url + "/media/" +questionMediaId;
+        let media = await fetch(url, {
+        method: 'GET',
+        headers: {
+        'Accept': 'image/jpeg',
+        }
+        }).then(res => res.blob());
+        console.log(media)
+        putMediaInsideDom(media);
+        return media;
+  }
+  else{
+    console.log("media id is null");
+    return null;
+  }
+}
+
+function putMediaInsideDom(mediaBlob){
+    let imgElement = document.createElement("img");
+    let url = URL.createObjectURL(mediaBlob);
+    imgElement.src = url;
+    imgElement.width = "500";
+    let imageContainer = document.getElementById("media-container");
+    imageContainer.replaceChildren();
+    imageContainer.appendChild(imgElement);
+}
 
 let firstQuestion;
 (async () =>{
