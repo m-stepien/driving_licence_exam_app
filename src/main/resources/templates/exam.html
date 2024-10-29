@@ -11,22 +11,33 @@
 <body>
 <header th:replace="fragments/navbar :: navbar"></header>
 <main>
-    <div class="quiz-container" id="quiz">
-        <div id="points"></div>
-        <div id="question-container">
-            <div class="question" id="question"></div>
-            <div class="options" id="options"></div>
+    <div class="app-container">
+        <div class="quiz-container" id="quiz">
+            <div id="points"></div>
+            <div id="question-container">
+                <div class="question" id="question"></div>
+                <div id="media-container"></div>
+                <div class="options" id="options"></div>
+            </div>
+        </div>
+        <div class="quiz-info">
+            <div class="bar-info">Base question</div>
+            <div class="bar-container">
+                <div class='bar' id="basic-bar"></div>
+                <div class="question-num" id="basic-question-number"></div>
+            </div>
+            <div class="bar-info">Specialization question</div>
+            <div class="bar-container">
+                <div class="bar" id="special-bar"></div>
+                <div class="question-num" id="specialization-question-number"></div>
+            </div>
+            <div id="timer-container">
+                <div id="info-timer"></div>
+                <div id="time"></div>
+            </div>
+            <button class="functional-button" id="next" onclick="nextQuestion()">Next</button>
         </div>
     </div>
-    <div class="quiz-info">
-        <div id="basic-question-number"></div>
-        <div id="specialization-question-number"></div>
-        <div id="timer-container">
-            <div id="info-timer"></div>
-            <div id="time"></div>
-        </div>
-    </div>
-    <button class="next-btn" id="next" onclick="nextQuestion()">Next</button>
     <script type="text/javascript">
         const category = "[[${category}]]"; "";
         console.log("Category:", category);

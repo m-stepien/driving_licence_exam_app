@@ -1,6 +1,3 @@
-//todo układ strony
-//todo miejsce na zdjecie nagranie
-
 //todo backend wyciagajacy zdjecia z bazy
 //todo pobranie zdjecia lub nagrania
 //todo wyswietlanie wyniku testu
@@ -65,8 +62,10 @@ function putQuestionInsideDOM(question){
 
 function putAnswersInsideOptionsContainer(answers, container){
     if(answers==null){
+        let container = document.getElementById("options");
+        container.classList.remove("options-wrapped");
         let button = document.createElement('button');
-        button.className = 'option-btn';
+        button.className = 'yn-button';
         button.textContent = 'Yes';
         button.dataset.value = 'y';
         button.onclick = function() {
@@ -74,7 +73,7 @@ function putAnswersInsideOptionsContainer(answers, container){
         };
         container.appendChild(button);
         let button2 = document.createElement('button');
-        button2.className = 'option-btn';
+        button2.className = 'yn-button';
         button2.dataset.value = 'n';
         button2.onclick = function() {
             selectAnswer('n');
@@ -83,11 +82,13 @@ function putAnswersInsideOptionsContainer(answers, container){
         container.appendChild(button2);
     }
     else{
+        let container = document.getElementById("options");
+        container.classList.add("options-wrapped");
         const answerKeys = Object.keys(answers);
         answerKeys.forEach(key => {
                 if(key!="id"){
                     let button = document.createElement('button');
-                    button.className = 'option-btn';
+                    button.className = 'abc-button';
                     button.dataset.value = key.slice(-1).toLowerCase();
                     button.textContent = answers[key];
                     button.onclick = function() {
@@ -102,6 +103,8 @@ function putAnswersInsideOptionsContainer(answers, container){
 }
 
 async function nextQuestion(){
+    await clearInterval(timer);
+    createReadInterval();
     if(!examSolution[currentQuestionId]){
         examSolution[currentQuestionId] = null;
     }
@@ -127,7 +130,7 @@ async function nextQuestion(){
         if(basicNumber+specializationNumber===numberOfQuestionByType.basic+numberOfQuestionByType.specialization){
             createFinishButton();
         }
-        createReadInterval();
+
 
 }
 function selectAnswer(answer){
@@ -141,6 +144,7 @@ function putNumbersOfQuestionInDom(){
     basicElement.innerHTML = basicNumber + "/" + numberOfQuestionByType.basic;
     specializationElement = document.getElementById("specialization-question-number");
     specializationElement.innerHTML = specializationNumber + "/" +numberOfQuestionByType.specialization;
+    progressBar();
 }
 
 function increaseQuestionNumber(){
@@ -197,6 +201,14 @@ function createReadInterval(){
         }
         secondLeft-=1;
     },1000);
+}
+
+function progressBar(){
+    let bPercent = basicNumber/numberOfQuestionByType.basic*100;
+    let sPercent = specializationNumber/numberOfQuestionByType.specialization*100;
+    document.getElementById("basic-bar").setAttribute("style","width:"+bPercent+"%");
+    document.getElementById("special-bar").setAttribute("style","width:"+sPercent+"%");
+
 }
 
 
