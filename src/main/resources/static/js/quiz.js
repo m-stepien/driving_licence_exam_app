@@ -1,6 +1,14 @@
-//todo playing wmv in website
 //todo wyswietlanie wyniku testu
 //todo zapis wyników do bazy danych
+//todo refaktoring bo nie da sie czytac...
+//todo ladowania mediow wkomponowane w przeplyw aplikacji
+//todo rozwiazanie problemu z media is null
+//todo korekta nie dzialajacego wczytania peirwszego pytania
+//todo sprawdzenie bledów z inkrementacja pytan
+//todo zrobienie ładnego layoutu dla mediow uniwersalnego dla wszystkich
+
+//todo navbar odnosniki do quizow
+//todo stworzenie widoku rezultatu egzaminu
 const server_url = "http://localhost:8080";
 let numberOfQuestionByType;
 let currentQuestionId;

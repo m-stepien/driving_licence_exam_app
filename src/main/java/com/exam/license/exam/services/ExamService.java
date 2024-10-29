@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.*;
-
+//todo zapis do bazy danych rezultatu testu
+//todo stworzenie tabel do przechowywania wynikow testow
 @Service
 @SessionScope
 public class ExamService {
@@ -88,8 +89,6 @@ public class ExamService {
     }
 
     public Score checkUserSolution(Map<Long, String> userSolutionMap) throws NoSuchElementInDatabaseException {
-        //todo what to do with score?
-        //todo save data of solution to database?
         List<UserAnswer> userSolution = SolutionMapper.mapSolutionAnswer(userSolutionMap);
         UserScore score = new UserScore();
         for (UserAnswer userAnswer : userSolution) {

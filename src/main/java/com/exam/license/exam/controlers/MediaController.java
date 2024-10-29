@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.InputStream;
-//todo discovery is it wmv or jpg
 //todo handling error
 
 @RestController
