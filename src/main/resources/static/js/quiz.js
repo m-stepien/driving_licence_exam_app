@@ -1,9 +1,18 @@
+//todo układ strony
+//todo miejsce na zdjecie nagranie
+
+//todo backend wyciagajacy zdjecia z bazy
+//todo pobranie zdjecia lub nagrania
+//todo wyswietlanie wyniku testu
+//todo zapis wyników do bazy danych
 const server_url = "http://localhost:8080";
 let numberOfQuestionByType;
 let currentQuestionId;
 let examSolution = {};
 let basicNumber = 0;
 let specializationNumber = 0;
+let secondLeft = 20;
+let timer;
 async function initQuiz(){
 await fetch(server_url + "/exam/" + category)
     .then(response => {
@@ -118,6 +127,8 @@ async function nextQuestion(){
         if(basicNumber+specializationNumber===numberOfQuestionByType.basic+numberOfQuestionByType.specialization){
             createFinishButton();
         }
+        createReadInterval();
+
 }
 function selectAnswer(answer){
     console.log("Select answer executed with");
@@ -141,6 +152,27 @@ function increaseQuestionNumber(){
     }
 }
 
+function loadImage(){
+    console.log("Here code to put image or start video");
+    //propably with something like setInterval to wait to the end of video
+    createAnswerInterval();
+}
+
+async function createAnswerInterval(){
+    secondLeft = 15;
+    let infoTimerElement = document.getElementById("info-timer");
+    infoTimerElement.innerHTML = "Time for answer";
+    timer = setInterval(function() {
+                let timeElement = document.getElementById("time");
+                timeElement.innerHTML = secondLeft+" s";
+                if(secondLeft == 0){
+                    clearInterval(timer);
+                    nextQuestion();
+                }
+                secondLeft-=1;
+            },1000);
+}
+
 function createFinishButton(){
     let finishButton = document.createElement('button');
     finishButton.className = 'option-btn';
@@ -152,6 +184,21 @@ function createFinishButton(){
     nextButton.replaceWith(finishButton);
 }
 
+function createReadInterval(){
+    secondLeft = 20;
+    let infoTimerElement = document.getElementById("info-timer");
+    infoTimerElement.innerHTML = "Time to read the question";
+    timer = setInterval(function() {
+        let timeElement = document.getElementById("time");
+        timeElement.innerHTML = secondLeft+" s";
+        if(secondLeft == 0){
+            clearInterval(timer);
+            loadImage();
+        }
+        secondLeft-=1;
+    },1000);
+}
+
 
 let firstQuestion;
 (async () =>{
@@ -159,4 +206,16 @@ firstQuestion = await initQuiz();
 putQuestionInsideDOM(firstQuestion);
 increaseQuestionNumber();
 putNumbersOfQuestionInDom();
+let timerInfo = document.getElementById("info-timer");
+timerInfo.innerHTML = "Time to read the question";
+
+timer = setInterval(function() {
+    let timeElement = document.getElementById("time");
+    timeElement.innerHTML = secondLeft+" s";
+    if(secondLeft == 0){
+        clearInterval(timer);
+        loadImage();
+    }
+    secondLeft-=1;
+},1000);
 })();
