@@ -2,13 +2,12 @@
 //todo zapis wyników do bazy danych
 //todo refaktoring bo nie da sie czytac...
 //todo ladowania mediow wkomponowane w przeplyw aplikacji
-//todo rozwiazanie problemu z media is null
-//todo korekta nie dzialajacego wczytania peirwszego pytania
-//todo sprawdzenie bledów z inkrementacja pytan
 //todo zrobienie ładnego layoutu dla mediow uniwersalnego dla wszystkich
-
 //todo navbar odnosniki do quizow
 //todo stworzenie widoku rezultatu egzaminu
+//todo gdy next a video nie wczytalo sie dokladniej gdy bardzo szybko klika next Uncaught (in promise) DOMException: The fetching process for the media resource was aborted by the user agent at the user's request.
+
+
 const server_url = "http://localhost:8080";
 let numberOfQuestionByType;
 let currentQuestionId;
@@ -48,8 +47,9 @@ await fetch(server_url + "/exam/" + category)
                        .catch(error => {
                            console.error('Fetch error:', error);
                        });
-    questionMediaId = question.media.id;
-    media = question.media;
+    if(question.media){
+        media = question.media;
+    }
     getMedia()
     return question;
 }
@@ -134,8 +134,9 @@ async function nextQuestion(){
                 .catch(error => {
                     console.error('Fetch error:', error);
                 });
-        questionMediaId = question.media.id;
-        media = question.media;
+        if(question.media){
+            media = question.media;
+        }
         getMedia();
         optionsConatiner = document.getElementById("options");
         optionsConatiner.replaceChildren();
@@ -236,6 +237,7 @@ async function getMedia(){
     }
   }
   else{
+    document.getElementById("media-container").replaceChildren();
     console.log("media is null");
   }
 }
@@ -251,6 +253,7 @@ function putVideoInsideDom(url){
      video.appendChild(source);
      mediaContainer.appendChild(video);
      media = null;
+     video.muted = true;
      video.load();
      video.play();
 }
