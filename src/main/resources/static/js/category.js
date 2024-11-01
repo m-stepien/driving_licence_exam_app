@@ -13,20 +13,19 @@ async function fetchAllCategoryName(){
 }
 
 function putCategoriesInsideNavbar(){
-    console.log("puttingi inside");
     let menuElement = document.getElementById("menu");
-    console.log(category.size)
-    for(let idx=0; idx<category.size; idx++){
-            console.log("estem")
+    const linkPrefix = "test/";
+    for(let idx=0; idx<category.length; idx++){
+            console.log(category[idx])
             let liElem = document.createElement("li");
-            liElem.innerHTML = cat.name;
-            menuElement.appendChild(menuElement);
+            let linkElem = document.createElement("a");
+            linkElem.innerHTML = category[idx].name;
+            linkElem.classList.add("nav-link");
+            linkElem.href = linkPrefix + category[idx].name;
+            liElem.classList.add("nav-item");
+            liElem.appendChild(linkElem);
+            menuElement.insertBefore(liElem, menuElement.firstChild);
     }
-//    category.foreach((cat) => {
-//        let liElem = document.createElement("li");
-//        liElem.innerHTML = cat.name;
-//        menuElement.appendChild(menuElement);
-//    });
 }
 
 (async ()=>{
