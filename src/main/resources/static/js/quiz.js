@@ -1,13 +1,12 @@
 //todo wyswietlanie wyniku testu
 //todo zapis wyników do bazy danych
 //todo refaktoring bo nie da sie czytac...
-//todo ladowania mediow wkomponowane w przeplyw aplikacji
 //todo zrobienie ładnego layoutu dla mediow uniwersalnego dla wszystkich
-//todo navbar odnosniki do quizow
 //todo stworzenie widoku rezultatu egzaminu
 //todo gdy next a video nie wczytalo sie dokladniej gdy bardzo szybko klika next Uncaught (in promise) DOMException: The fetching process for the media resource was aborted by the user agent at the user's request.
+//todo ladowania mediow wkomponowane w przeplyw aplikacji
 
-
+//todo navbar odnosniki do quizow
 const server_url = "http://localhost:8080";
 let numberOfQuestionByType;
 let currentQuestionId;
@@ -50,7 +49,6 @@ await fetch(server_url + "/exam/" + category)
     if(question.media){
         media = question.media;
     }
-    getMedia()
     return question;
 }
 
@@ -137,7 +135,6 @@ async function nextQuestion(){
         if(question.media){
             media = question.media;
         }
-        getMedia();
         optionsConatiner = document.getElementById("options");
         optionsConatiner.replaceChildren();
         putQuestionInsideDOM(question);
@@ -174,7 +171,7 @@ function increaseQuestionNumber(){
 
 function loadImage(){
     console.log("Here code to put image or start video");
-    //propably with something like setInterval to wait to the end of video
+    getMedia();
     createAnswerInterval();
 }
 
@@ -256,6 +253,9 @@ function putVideoInsideDom(url){
      video.muted = true;
      video.load();
      video.play();
+     video.addEventListener("ended", () => {
+        console.log("Video ended");
+     })
 }
 
 async function putImageInsideDom(url){
@@ -274,6 +274,10 @@ async function putImageInsideDom(url){
     imageContainer.replaceChildren();
     imageContainer.appendChild(imgElement);
     media = null;
+}
+
+function skipReadingTime(){
+
 }
 
 let firstQuestion;

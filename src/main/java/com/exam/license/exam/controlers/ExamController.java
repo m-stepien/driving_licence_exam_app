@@ -3,6 +3,7 @@ package com.exam.license.exam.controlers;
 import com.exam.license.exam.exceptions.EndOfQuestionsInExam;
 import com.exam.license.exam.exceptions.NoSuchElementInDatabaseException;
 import com.exam.license.exam.exceptions.NotEnoughtQuestionsException;
+import com.exam.license.exam.models.Category;
 import com.exam.license.exam.models.Question;
 import com.exam.license.exam.models.Score;
 import com.exam.license.exam.services.ExamService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -71,5 +73,11 @@ public class ExamController {
     public ResponseEntity<Score> sendSolution(Map<Long, String> solution) throws NoSuchElementInDatabaseException{
         Score userScore = this.examService.checkUserSolution(solution);
         return ResponseEntity.status(200).body(userScore);
+    }
+
+        @GetMapping("/category/all")
+    public ResponseEntity<List<Category>> fetchAllCategoryAsList(){
+        List<Category> categoryAll = this.examService.getAllCategoryOfQuestions();
+        return ResponseEntity.ok(categoryAll);
     }
 }

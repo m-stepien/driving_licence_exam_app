@@ -3,10 +3,7 @@ package com.exam.license.exam.services;
 import com.exam.license.exam.exceptions.EndOfQuestionsInExam;
 import com.exam.license.exam.exceptions.NoSuchElementInDatabaseException;
 import com.exam.license.exam.exceptions.NotEnoughtQuestionsException;
-import com.exam.license.exam.models.Question;
-import com.exam.license.exam.models.Score;
-import com.exam.license.exam.models.UserAnswer;
-import com.exam.license.exam.models.UserScore;
+import com.exam.license.exam.models.*;
 import com.exam.license.exam.repository.CategoryRepository;
 import com.exam.license.exam.repository.QuestionRepository;
 import com.exam.license.exam.utils.SolutionMapper;
@@ -123,5 +120,11 @@ public class ExamService {
             sum+=entry.getValue();
         }
         return sum;
+    }
+
+    public List<Category> getAllCategoryOfQuestions(){
+        List<Category> categoryList = this.categoryRepository.findAll();
+        //propably will be with all of question so be carefull
+        return categoryList;
     }
 }

@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <a class="navbar-brand" href="/">Home</a>
         <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ml-auto" id ="menu">
                 <li class="nav-item" th:if="${username == null}">
                     <a class="nav-link" th:href="@{/login}">Login</a>
                 </li>
@@ -21,6 +21,7 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </nav>
+    <script th:src="@{/js/category.js}" defer></script>
 </header>
 
 </html>
