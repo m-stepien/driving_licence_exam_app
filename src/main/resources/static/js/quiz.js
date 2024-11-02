@@ -2,9 +2,7 @@
 //todo zapis wyników do bazy danych
 //todo refaktoring bo nie da sie czytac...
 //todo stworzenie widoku rezultatu egzaminu
-//todo dodanie eventlisteningu który ominie interwal zapoznania sie z pytaniem
 
-//todo zrobienie ładnego layoutu dla mediow uniwersalnego dla wszystkich
 const server_url = "http://localhost:8080";
 let numberOfQuestionByType;
 let currentQuestionId;
@@ -13,8 +11,10 @@ let basicNumber = 0;
 let specializationNumber = 0;
 let secondLeft = 20;
 let timer;
+let isReadingTime = true;
 let questionMediaId;
 let media;
+let clickToStartImg;
 async function initQuiz(){
 await fetch(server_url + "/exam/" + category)
     .then(response => {
@@ -139,6 +139,7 @@ async function nextQuestion(){
         putQuestionInsideDOM(question);
         increaseQuestionNumber();
         putNumbersOfQuestionInDom();
+        document.getElementById("media-container").appendChild(clickToStartImg);
         if(basicNumber+specializationNumber===numberOfQuestionByType.basic+numberOfQuestionByType.specialization){
             createFinishButton();
         }
@@ -171,21 +172,22 @@ function increaseQuestionNumber(){
 
 function loadImage(){
     getMedia();
-    createAnswerInterval();
 }
 
 async function createAnswerInterval(){
     secondLeft = 15;
     let infoTimerElement = document.getElementById("info-timer");
     infoTimerElement.innerHTML = "Time for answer";
+    let timeElement = document.getElementById("time");
+    timeElement.innerHTML = secondLeft+" s";
     timer = setInterval(function() {
                 let timeElement = document.getElementById("time");
+                secondLeft-=1;
                 timeElement.innerHTML = secondLeft+" s";
                 if(secondLeft == 0){
                     clearInterval(timer);
                     nextQuestion();
                 }
-                secondLeft-=1;
             },1000);
 }
 
@@ -201,6 +203,7 @@ function createFinishButton(){
 }
 
 function createReadInterval(){
+    isReadingTime=true;
     let mediaContainer = document.getElementById("media-container");
     mediaContainer.replaceChildren();
     secondLeft = 20;
@@ -210,6 +213,7 @@ function createReadInterval(){
         let timeElement = document.getElementById("time");
         timeElement.innerHTML = secondLeft+" s";
         if(secondLeft == 0){
+            isReadingTime=false;
             clearInterval(timer);
             loadImage();
         }
@@ -225,18 +229,21 @@ function progressBar(){
 }
 
 async function getMedia(){
+  document.getElementById("media-container").replaceChildren();
   if(media){
-    var url = server_url + "/media/" + media.id;
+    let url = server_url + "/media/" + media.id;
     if(media.type==="jpg"){
         putImageInsideDom(url);
+        createAnswerInterval();
     }
-    else{
+    else if(media.type==="wmv"){
         putVideoInsideDom(url);
     }
   }
   else{
-    document.getElementById("media-container").replaceChildren();
-    console.log("media is null");
+    let url = server_url + "/media/0";
+    putImageInsideDom(url);
+    createAnswerInterval();
   }
 }
 
@@ -254,8 +261,9 @@ function putVideoInsideDom(url){
      video.load();
      video.play();
      video.addEventListener("ended", () => {
-        console.log("Video ended");
+        createAnswerInterval();
      })
+     putWaitToVideoEndInfoInsideDOM();
 }
 
 async function putImageInsideDom(url){
@@ -274,9 +282,22 @@ async function putImageInsideDom(url){
     media = null;
 }
 
-//function skipReadingTime(){
-//
-//}
+function putWaitToVideoEndInfoInsideDOM(){
+    let labelElement = document.getElementById("info-timer");
+    labelElement.innerHTML = "video is playing";
+    let timer = document.getElementById("time");
+    timer.innerHTML = "...";
+}
+
+function skipReadingTime(){
+    console.log("Inside skipReadingTime");
+    if(isReadingTime){
+        console.log("Inside if");
+        isReadingTime=false;
+        clearInterval(timer);
+        loadImage();
+    }
+}
 
 function hightlightSelectedAnswer(selectedButton){
     const selectedClassName = "button-selected";
@@ -292,6 +313,7 @@ function hightlightSelectedAnswer(selectedButton){
 
 let firstQuestion;
 (async () =>{
+clickToStartImg = document.getElementById("click-to-start");
 firstQuestion = await initQuiz();
 putQuestionInsideDOM(firstQuestion);
 increaseQuestionNumber();
@@ -300,12 +322,15 @@ let timerInfo = document.getElementById("info-timer");
 timerInfo.innerHTML = "Time to read the question";
 
 timer = setInterval(function() {
+    isReadingTime = true;
     let timeElement = document.getElementById("time");
     timeElement.innerHTML = secondLeft+" s";
     if(secondLeft == 0){
+        isReadingTime=false;
         clearInterval(timer);
         loadImage();
     }
     secondLeft-=1;
 },1000);
+document.getElementById("media-container").addEventListener("click", skipReadingTime);
 })();

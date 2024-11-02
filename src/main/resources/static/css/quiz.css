@@ -110,6 +110,11 @@ margin:auto;
     top: 0;
     left: 0;
   }
+
+#question{
+    font-size: 20px;
+}
+
 .question-num{
     position: relative;
     margin:auto;
