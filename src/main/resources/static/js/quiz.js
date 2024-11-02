@@ -1,12 +1,10 @@
 //todo wyswietlanie wyniku testu
 //todo zapis wyników do bazy danych
 //todo refaktoring bo nie da sie czytac...
-//todo zrobienie ładnego layoutu dla mediow uniwersalnego dla wszystkich
 //todo stworzenie widoku rezultatu egzaminu
-//todo gdy next a video nie wczytalo sie dokladniej gdy bardzo szybko klika next Uncaught (in promise) DOMException: The fetching process for the media resource was aborted by the user agent at the user's request.
-//todo ladowania mediow wkomponowane w przeplyw aplikacji
+//todo dodanie eventlisteningu który ominie interwal zapoznania sie z pytaniem
 
-//todo navbar odnosniki do quizow
+//todo zrobienie ładnego layoutu dla mediow uniwersalnego dla wszystkich
 const server_url = "http://localhost:8080";
 let numberOfQuestionByType;
 let currentQuestionId;
@@ -79,14 +77,15 @@ function putAnswersInsideOptionsContainer(answers, container){
         button.textContent = 'Yes';
         button.dataset.value = 'y';
         button.onclick = function() {
-            selectAnswer('y');
+            selectAnswer('y',this);
+
         };
         container.appendChild(button);
         let button2 = document.createElement('button');
         button2.className = 'yn-button';
         button2.dataset.value = 'n';
         button2.onclick = function() {
-            selectAnswer('n');
+            selectAnswer('n', this);
         };
         button2.textContent = 'No';
         container.appendChild(button2);
@@ -102,7 +101,7 @@ function putAnswersInsideOptionsContainer(answers, container){
                     button.dataset.value = key.slice(-1).toLowerCase();
                     button.textContent = answers[key];
                     button.onclick = function() {
-                                    selectAnswer(this.getAttribute('data-value'));
+                                    selectAnswer(this.getAttribute('data-value'), this);
                                 };
                     container.appendChild(button);
                 }
@@ -146,10 +145,11 @@ async function nextQuestion(){
 
 
 }
-function selectAnswer(answer){
+function selectAnswer(answer, element){
     console.log("Select answer executed with");
     console.log(answer);
     examSolution[currentQuestionId] = answer;
+    hightlightSelectedAnswer(element);
 }
 
 function putNumbersOfQuestionInDom(){
@@ -170,7 +170,6 @@ function increaseQuestionNumber(){
 }
 
 function loadImage(){
-    console.log("Here code to put image or start video");
     getMedia();
     createAnswerInterval();
 }
@@ -202,6 +201,8 @@ function createFinishButton(){
 }
 
 function createReadInterval(){
+    let mediaContainer = document.getElementById("media-container");
+    mediaContainer.replaceChildren();
     secondLeft = 20;
     let infoTimerElement = document.getElementById("info-timer");
     infoTimerElement.innerHTML = "Time to read the question";
@@ -241,7 +242,6 @@ async function getMedia(){
 
 function putVideoInsideDom(url){
      let mediaContainer = document.getElementById("media-container");
-     mediaContainer.replaceChildren();
      let video = document.createElement("video");
      video.id = "videoPlayer";
      const source = document.createElement("source");
@@ -269,15 +269,25 @@ async function putImageInsideDom(url){
     let imgElement = document.createElement("img");
     let urlImage = URL.createObjectURL(imageBlob);
     imgElement.src = urlImage;
-    imgElement.width = "500";
     let imageContainer = document.getElementById("media-container");
-    imageContainer.replaceChildren();
     imageContainer.appendChild(imgElement);
     media = null;
 }
 
-function skipReadingTime(){
+//function skipReadingTime(){
+//
+//}
 
+function hightlightSelectedAnswer(selectedButton){
+    const selectedClassName = "button-selected";
+    let buttons = document.getElementsByClassName("yn-button");
+    if(buttons.length == 0){
+        buttons = document.getElementsByClassName("abc-button");
+    }
+    for(let idx = 0; idx<buttons.length; idx++){
+        buttons[idx].classList.remove(selectedClassName);
+    }
+    selectedButton.classList.add(selectedClassName);
 }
 
 let firstQuestion;
