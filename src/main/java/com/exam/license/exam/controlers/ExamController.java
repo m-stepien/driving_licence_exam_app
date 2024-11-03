@@ -70,12 +70,12 @@ public class ExamController {
     }
 
     @PostMapping("/send/solution")
-    public ResponseEntity<Score> sendSolution(Map<Long, String> solution) throws NoSuchElementInDatabaseException{
+    public ResponseEntity<Score> sendSolution(@RequestBody Map<Integer, String> solution) throws NoSuchElementInDatabaseException{
         Score userScore = this.examService.checkUserSolution(solution);
         return ResponseEntity.status(200).body(userScore);
     }
 
-        @GetMapping("/category/all")
+    @GetMapping("/category/all")
     public ResponseEntity<List<Category>> fetchAllCategoryAsList(){
         List<Category> categoryAll = this.examService.getAllCategoryOfQuestions();
         return ResponseEntity.ok(categoryAll);

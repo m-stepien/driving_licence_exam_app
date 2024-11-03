@@ -13,14 +13,14 @@ async function fetchAllCategoryName(){
 
 function putCategoriesInsideNavbar(){
     let menuElement = document.getElementById("menu");
-    const linkPrefix = "test/";
+    const linkPrefix = "/test/";
     for(let idx=0; idx<categories.length; idx++){
             console.log(categories[idx])
             let liElem = document.createElement("li");
             let linkElem = document.createElement("a");
             linkElem.innerHTML = categories[idx].name;
             linkElem.classList.add("nav-link");
-            linkElem.href = linkPrefix + categories[idx].name;
+            linkElem.href = server + linkPrefix + categories[idx].name;
             liElem.classList.add("nav-item");
             liElem.appendChild(linkElem);
             menuElement.insertBefore(liElem, menuElement.firstChild);

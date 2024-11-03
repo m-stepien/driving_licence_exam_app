@@ -85,7 +85,7 @@ public class ExamService {
         return questions;
     }
 
-    public Score checkUserSolution(Map<Long, String> userSolutionMap) throws NoSuchElementInDatabaseException {
+    public Score checkUserSolution(Map<Integer, String> userSolutionMap) throws NoSuchElementInDatabaseException {
         List<UserAnswer> userSolution = SolutionMapper.mapSolutionAnswer(userSolutionMap);
         UserScore score = new UserScore();
         for (UserAnswer userAnswer : userSolution) {
@@ -124,7 +124,6 @@ public class ExamService {
 
     public List<Category> getAllCategoryOfQuestions(){
         List<Category> categoryList = this.categoryRepository.findAll();
-        //propably will be with all of question so be carefull
         return categoryList;
     }
 }

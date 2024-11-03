@@ -1,6 +1,5 @@
 //todo wyswietlanie wyniku testu
 //todo zapis wyników do bazy danych
-//todo refaktoring bo nie da sie czytac...
 //todo stworzenie widoku rezultatu egzaminu
 
 const server_url = "http://localhost:8080";
@@ -51,8 +50,13 @@ await fetch(server_url + "/exam/" + category)
 }
 
 async function sendAnswers(){
+    console.log("examSolution");
+    console.log(examSolution);
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
     const response = await fetch(server_url + "/exam/send/solution", {
       method: "POST",
+      headers: myHeaders,
       body: JSON.stringify(examSolution),
       })
     console.log(response.status);
@@ -171,7 +175,22 @@ function increaseQuestionNumber(){
 }
 
 function loadImage(){
-    getMedia();
+  document.getElementById("media-container").replaceChildren();
+  if(media){
+    let url = server_url + "/media/" + media.id;
+    if(media.type==="jpg"){
+        putImageInsideDom(url);
+        createAnswerInterval();
+    }
+    else if(media.type==="wmv"){
+        putVideoInsideDom(url);
+    }
+  }
+  else{
+    let url = server_url + "/media/0";
+    putImageInsideDom(url);
+    createAnswerInterval();
+  }
 }
 
 async function createAnswerInterval(){
@@ -228,24 +247,6 @@ function progressBar(){
     document.getElementById("special-bar").setAttribute("style","width:"+sPercent+"%");
 }
 
-async function getMedia(){
-  document.getElementById("media-container").replaceChildren();
-  if(media){
-    let url = server_url + "/media/" + media.id;
-    if(media.type==="jpg"){
-        putImageInsideDom(url);
-        createAnswerInterval();
-    }
-    else if(media.type==="wmv"){
-        putVideoInsideDom(url);
-    }
-  }
-  else{
-    let url = server_url + "/media/0";
-    putImageInsideDom(url);
-    createAnswerInterval();
-  }
-}
 
 function putVideoInsideDom(url){
      let mediaContainer = document.getElementById("media-container");
