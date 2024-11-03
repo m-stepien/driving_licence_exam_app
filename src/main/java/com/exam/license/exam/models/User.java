@@ -1,10 +1,12 @@
 package com.exam.license.exam.models;
 
 import jakarta.persistence.*;
-
+//todo this must extands org.springframework.security.core.userdetails.User
+//todo create authority
+//todo create admin account
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends org.springframework.security.core.userdetails.User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,9 +15,6 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-
-    public User() {
-    }
 
     public User(String username, String email, String password) {
         this.username = username;

@@ -6,10 +6,12 @@ import com.exam.license.exam.exceptions.NotEnoughtQuestionsException;
 import com.exam.license.exam.models.Category;
 import com.exam.license.exam.models.Question;
 import com.exam.license.exam.models.Score;
+import com.exam.license.exam.models.User;
 import com.exam.license.exam.services.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -70,9 +72,14 @@ public class ExamController {
     }
 
     @PostMapping("/send/solution")
-    public ResponseEntity<Score> sendSolution(@RequestBody Map<Integer, String> solution) throws NoSuchElementInDatabaseException{
+    public ResponseEntity<Void> sendSolution(@RequestBody Map<Integer, String> solution) throws NoSuchElementInDatabaseException{
         Score userScore = this.examService.checkUserSolution(solution);
-        return ResponseEntity.status(200).body(userScore);
+        long userId = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        userScore.setUserId(userId);
+        long scoreId = this.examService.saveUserScore(userScore);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/test/score/"+scoreId));
+        return ResponseEntity.status(200).headers(headers).build();
     }
 
     @GetMapping("/category/all")

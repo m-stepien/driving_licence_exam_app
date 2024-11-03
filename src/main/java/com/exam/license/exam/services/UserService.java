@@ -1,5 +1,6 @@
 package com.exam.license.exam.services;
 
+import com.exam.license.exam.exceptions.NoSuchElementInDatabaseException;
 import com.exam.license.exam.models.User;
 import com.exam.license.exam.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,9 @@ public class UserService {
 
     public Optional<User> findByUsername(String username){
         return this.userRepository.findByUsername(username);
+    }
+
+    public long findIdByUsername(String username) throws NoSuchElementInDatabaseException{
+        return this.findByUsername(username).orElseThrow(NoSuchElementInDatabaseException::new).getId();
     }
 }

@@ -1,17 +1,30 @@
 package com.exam.license.exam.models;
 
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Entity
 public class Score {
-    int points;
-    int of;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private int points;
+    @Column(name="of_point")
+    private int of;
+    private long userId;
+    @Column(name="time_of_exam")
+    private LocalDateTime timeOfExam;
 
     public Score() {
+        timeOfExam = LocalDateTime.now();
     }
 
     public Score(int points, int of) {
         this.points = points;
         this.of = of;
+        timeOfExam = LocalDateTime.now();
     }
 
     public int getPoints() {
@@ -36,6 +49,26 @@ public class Score {
         if (o == null || getClass() != o.getClass()) return false;
         Score score = (Score) o;
         return points == score.points && of == score.of;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public LocalDateTime getTimeOfExam() {
+        return timeOfExam;
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.exam.license.exam.exceptions.NotEnoughtQuestionsException;
 import com.exam.license.exam.models.*;
 import com.exam.license.exam.repository.CategoryRepository;
 import com.exam.license.exam.repository.QuestionRepository;
+import com.exam.license.exam.repository.ScoreRepository;
 import com.exam.license.exam.utils.SolutionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,17 @@ import java.util.*;
 public class ExamService {
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
+    private final ScoreRepository scoreRepository;
     private List<Question> exam;
     private int questionIdx;
     private Map<Integer, Integer> basicQuestionNumberByPoints = new HashMap<>();
     private Map<Integer, Integer> specializationQuestionNumberByPoints = new HashMap<>();
 
     @Autowired
-    public ExamService(QuestionRepository questionRepository, CategoryRepository categoryRepository) {
+    public ExamService(QuestionRepository questionRepository, CategoryRepository categoryRepository, ScoreRepository scoreRepository) {
         this.questionRepository = questionRepository;
         this.categoryRepository = categoryRepository;
+        this.scoreRepository = scoreRepository;
         this.basicQuestionNumberByPoints.put(3, 10);
         this.basicQuestionNumberByPoints.put(2,6);
         this.basicQuestionNumberByPoints.put(1,4);
@@ -125,5 +128,9 @@ public class ExamService {
     public List<Category> getAllCategoryOfQuestions(){
         List<Category> categoryList = this.categoryRepository.findAll();
         return categoryList;
+    }
+
+    public long saveUserScore(Score score){
+        return this.scoreRepository.save(score).getId();
     }
 }

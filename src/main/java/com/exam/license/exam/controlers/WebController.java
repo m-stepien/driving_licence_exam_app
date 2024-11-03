@@ -64,4 +64,9 @@ public class WebController {
         model.addAttribute("category", category);
         return "exam";
     }
+
+    @GetMapping(value = "/test/score/{scoreId}")
+    public String getScore(@PathVariable long scoreId){
+        return "score";
+    }
 }

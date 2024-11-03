@@ -60,6 +60,7 @@ async function sendAnswers(){
       body: JSON.stringify(examSolution),
       })
     console.log(response.status);
+    console.log(response);
 }
 
 function putQuestionInsideDOM(question){

@@ -73,3 +73,9 @@ insert into category_connection(question_id, category_id) select qustion_temp.qu
 drop table qustion_temp;
 
 update category set name = LOWER(category.name);
+
+update question set answer_correct = 'n' where answer_correct ='N';
+update question set answer_correct = 'y' where answer_correct ='Y';
+update question set answer_correct = 'a' where answer_correct ='A';
+update question set answer_correct = 'b' where answer_correct ='B';
+update question set answer_correct = 'c' where answer_correct ='C';
