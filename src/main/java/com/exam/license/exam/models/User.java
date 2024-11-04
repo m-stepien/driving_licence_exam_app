@@ -9,9 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//todo this must extands org.springframework.security.core.userdetails.User
-//todo create authority
-//todo create admin account
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {

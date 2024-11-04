@@ -1,5 +1,4 @@
 //todo wyswietlanie wyniku testu
-//todo zapis wyników do bazy danych
 //todo stworzenie widoku rezultatu egzaminu
 
 const server_url = "http://localhost:8080";

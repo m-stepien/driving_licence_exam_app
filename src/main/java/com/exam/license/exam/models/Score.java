@@ -71,6 +71,11 @@ public class Score {
         return timeOfExam;
     }
 
+    public void addScore(Score score){
+        this.setPoints(this.getPoints()+ score.getPoints());
+        this.setOf(this.getOf() + score.getOf());
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(points, of);

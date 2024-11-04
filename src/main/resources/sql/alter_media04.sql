@@ -7,7 +7,7 @@ insert into media(id, file_name, file_type) values (0, 'no-image-found.jpg', 'jp
 
 create table score(
 id SERIAL primary key,
-point integer,
+points integer,
 of_point integer,
 time_of_exam TIMESTAMP,
 user_id integer

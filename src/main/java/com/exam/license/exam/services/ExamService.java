@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.*;
-//todo zapis do bazy danych rezultatu testu
-//todo stworzenie tabel do przechowywania wynikow testow
 @Service
 @SessionScope
 public class ExamService {
@@ -90,11 +88,11 @@ public class ExamService {
 
     public Score checkUserSolution(Map<Integer, String> userSolutionMap) throws NoSuchElementInDatabaseException {
         List<UserAnswer> userSolution = SolutionMapper.mapSolutionAnswer(userSolutionMap);
-        UserScore score = new UserScore();
+        Score userScore = new Score();
         for (UserAnswer userAnswer : userSolution) {
-            score.addScore(this.checkAnswer(userAnswer));
+            userScore.addScore(this.checkAnswer(userAnswer));
         }
-        return score;
+        return userScore;
     }
 
     public Score checkAnswer(UserAnswer userAnswer) throws NoSuchElementInDatabaseException {
