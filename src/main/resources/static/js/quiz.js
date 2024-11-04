@@ -47,7 +47,6 @@ await fetch(server_url + "/exam/" + category)
     }
     return question;
 }
-
 async function sendAnswers(){
     console.log("examSolution");
     console.log(examSolution);
@@ -58,8 +57,8 @@ async function sendAnswers(){
       headers: myHeaders,
       body: JSON.stringify(examSolution),
       })
-    console.log(response.status);
-    console.log(response);
+    const location = response.url;
+    window.location.href = location;
 }
 
 function putQuestionInsideDOM(question){
@@ -205,7 +204,12 @@ async function createAnswerInterval(){
                 timeElement.innerHTML = secondLeft+" s";
                 if(secondLeft == 0){
                     clearInterval(timer);
-                    nextQuestion();
+                    if(basicNumber+specializationNumber===numberOfQuestionByType.basic+numberOfQuestionByType.specialization){
+                        sendAnswers();
+                    }
+                    else{
+                        nextQuestion();
+                    }
                 }
             },1000);
 }

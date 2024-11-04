@@ -12,7 +12,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 
-//todo globalna obsluga bledow
+//todo global error handling
+//todo create admin view
+//todo creation of new exam category
+//todo adding new question to exam category
+//todo deleting question
+//todo deleting category warning if there are question
+//todo adding deleting media for question
+//todo write unit test
+//todo add logger
+//todo make script to download question and media
+//todo export to docker full application
+//todo write documentation
+//todo write readme
+//todo show history of user exams
+//todo add some text to templates
 @SpringBootApplication
 public class App {
 

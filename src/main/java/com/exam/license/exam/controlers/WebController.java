@@ -65,7 +65,7 @@ public class WebController {
         return "exam";
     }
 
-    @GetMapping(value = "/test/score/{scoreId}")
+    @GetMapping(value = "/score/{scoreId}")
     public String getScore(@PathVariable long scoreId){
         return "score";
     }

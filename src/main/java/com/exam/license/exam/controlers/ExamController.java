@@ -78,8 +78,8 @@ public class ExamController {
         userScore.setUserId(userId);
         long scoreId = this.examService.saveUserScore(userScore);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/test/score/"+scoreId));
-        return ResponseEntity.status(200).headers(headers).build();
+        headers.setLocation(URI.create("/score/"+scoreId));
+        return ResponseEntity.status(301).headers(headers).build();
     }
 
     @GetMapping("/category/all")
